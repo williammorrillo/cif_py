@@ -10,6 +10,7 @@ from . import parser
 from . import output
 from . import file_io
 
+
 def main(args):
     """
     Main function for parsing cif files.

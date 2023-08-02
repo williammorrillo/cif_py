@@ -5,7 +5,6 @@ Parser for cif files.
 import os
 import re
 import numpy as np
-from output import OutputWriter
 
 
 def parse_loop(block, dict):
