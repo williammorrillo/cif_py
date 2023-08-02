@@ -13,9 +13,7 @@ setuptools.setup(
         description="A python package for reading and writing CIF files",
         long_description=long_description,
         long_description_content_type="text/markdown",
-        url={
-            "Source Code": "https://github.com/williammorrillo/cif_py",
-            }
+        url="https://github.com/williammorrillo/cif_py",
         classifiers=[
             "Programming Language :: Python :: 3",
             "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
