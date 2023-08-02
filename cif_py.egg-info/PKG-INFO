@@ -1,0 +1,55 @@
+Metadata-Version: 2.1
+Name: cif-py
+Version: 0.0.1
+Summary: A python package for reading and writing CIF files
+Home-page: https://github.com/williammorrillo/cif_py
+Author: William Morrillo
+Author-email: williammorrillo@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# cif_py
+
+`cif_py` is a package for parsing crystallographic information files (CIF's) and writing 
+outputs in the desired format.
+
+# Installation via pip
+
+`cif_py` can be installed via `pip`. If installing on a shared machine use the `--user` argument.
+
+```
+pip install cif_py
+```
+
+To upgrade the package use the folloing command:
+```
+pip install cif_py --upgrade
+```
+
+# Installation of an edible version
+
+** only to be done if you are contributing **
+
+In the package directory, run the following command:
+
+```
+pip install -e .
+```
+
+# Uninstall cif_py
+
+```
+pip uninstall cif_py
+```
+
+# Programme use 
+
+To envoke the help menu run:
+
+```
+cif_py -h
+```

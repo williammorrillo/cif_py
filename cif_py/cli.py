@@ -53,7 +53,6 @@ def read_args():
     Read command line arguments.
     """
     parser = argparse.ArgumentParser(
-            description='Parse cif files'
             prog='cif_py',
             description=dedent('''
                                Parser for cif files

@@ -1,0 +1,2 @@
+[console_scripts]
+cif_py = cif_py.cli:main

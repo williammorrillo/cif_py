@@ -1,0 +1,17 @@
+LICENSE
+README.md
+setup.cfg
+setup.py
+cif_py/__init__.py
+cif_py/__version__.py
+cif_py/cli.py
+cif_py/file_io.py
+cif_py/output.py
+cif_py/parser.py
+cif_py/utilities.py
+cif_py.egg-info/PKG-INFO
+cif_py.egg-info/SOURCES.txt
+cif_py.egg-info/dependency_links.txt
+cif_py.egg-info/entry_points.txt
+cif_py.egg-info/requires.txt
+cif_py.egg-info/top_level.txt
