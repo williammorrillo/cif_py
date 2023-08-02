@@ -9,7 +9,7 @@ setuptools.setup(
         name="cif_py",
         version=__version__,
         author="William Morrillo",
-        author_email="williammorrillo@gmail.com"
+        author_email="williammorrillo@gmail.com",
         description="A python package for reading and writing CIF files",
         long_description=long_description,
         long_description_content_type="text/markdown",
