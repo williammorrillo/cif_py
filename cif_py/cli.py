@@ -3,15 +3,14 @@ Command line interface for cif_py
 """
 import argparse
 import os
-
-from h5py._hl import files
+from textwrap import dedent
 
 from . import parser
 from . import output
 from . import file_io
 
 
-def main(args):
+def CifParse(args):
     """
     Main function for parsing cif files.
     """
@@ -20,7 +19,7 @@ def main(args):
     h5_file_name = args.h5_file_name
     vasp = args.vasp
 
-    if cif_file_name is None:
+    if cif_file_name is not None:
         # check if file exists
         if not os.path.isfile(cif_file_name):
             raise FileNotFoundError('File {} not found'.format(cif_file_name))
@@ -28,7 +27,7 @@ def main(args):
         data = parser.parse_cif(cif_file_name)
         file_io.h5_write(data, cif_file_name)
 
-    elif h5_file_name is None:
+    elif h5_file_name is not None:
         # check if file exists
         if not os.path.isfile(h5_file_name):
             raise FileNotFoundError('File {} not found'.format(h5_file_name))
@@ -49,22 +48,22 @@ def main(args):
                 'Please select the output format')
 
 
-def read_args():
+def read_args(arg_list=None):
     """
     Read command line arguments.
     """
     parser = argparse.ArgumentParser(
             prog='cif_py',
-            description=dedent('''
-                               Parser for cif files
+            description='''
+Parser for cif files
 
-                               Input: cif or h5 file
-                               -- cif_file_name: cif file to parse
-                               -- h5_file_name: h5 file to parse
+Input: cif or h5 file
+-- cif_file_name: cif file to parse
+-- h5_file_name: h5 file to parse
 
-                               output:
-                               -- vasp: POSCAR
-                               '''),
+output:
+-- vasp: POSCAR
+''',
             epilog='Author: William Morrillo',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
@@ -85,10 +84,11 @@ def read_args():
             help='h5 file to parse',
             default=None)
 
-    parser.set_defaults(func=main)
-    args = parser.parse_args()
+    parser.set_defaults(func=CifParse)
+    args = parser.parse_args(arg_list)
+
     args.func(args)
 
 
-if __name__ == '__main__':
-    args = read_args()
+def main():
+    read_args()

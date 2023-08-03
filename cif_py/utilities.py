@@ -75,7 +75,9 @@ def get_sym_ops(data):
     sym_ops = None
 
     try:
-        sym_ops = data['_symmetry_equiv_pos_as_xyz']
+        sym_ops = data['_symmetry_equiv_pos_as_xyz'][:, 1]
+        sym_ops = [x.split(',') for x in sym_ops]
+        sym_ops = np.reshape(sym_ops, (-1, 3))
     except:
         pass
 
@@ -86,19 +88,19 @@ def get_sym_ops(data):
 
     if sym_ops is not None:
 
-        replace_str_int(sym_ops)
+        return format_ops(sym_ops)
 
-        return sym_ops
+    else:
+        print('No symmetry operations found in cif file.')
+
+        return [[(1, 0), (1, 0), (1, 0)]]
 
 
-def replace_str_int(sym_ops):
+def format_ops(sym_ops):
     for i in range(len(sym_ops)):
         for j in range(3):
             sym_ops[i, j] = sym_ops[i, j].replace("'", "")
             sym_ops[i, j] = sym_ops[i, j].replace(",", "")
-            sym_ops[i, j] = sym_ops[i, j].replace("x", "1")
-            sym_ops[i, j] = sym_ops[i, j].replace("y", "1")
-            sym_ops[i, j] = sym_ops[i, j].replace("z", "1")
             sym_ops[i, j] = sym_ops[i, j].replace("1/2", "0.5")
             sym_ops[i, j] = sym_ops[i, j].replace("1/3", "0.3333333333333333")
             sym_ops[i, j] = sym_ops[i, j].replace("2/3", "0.6666666666666666")
@@ -121,28 +123,26 @@ def replace_str_int(sym_ops):
             sym_ops[i, j] = sym_ops[i, j].replace("5/8", "0.625")
             sym_ops[i, j] = sym_ops[i, j].replace("7/8", "0.875")
 
-            if sym_ops[i, j].startswith("-"):
-                # split by position 2
-                sym_ops[i, j] = (sym_ops[i, j][0:2], sym_ops[i, j][3:])
-            else:
-                # split by position 1
-                sym_ops[i, j] = (sym_ops[i, j][0:1], sym_ops[i, j][2:])
-
-            if sym_ops[i, j][1] == '':
-                sym_ops[i, j] = (sym_ops[i, j][0], 0)
-
     return sym_ops
 
 
 def apply_sym_ops(sym_ops, coords):
 
-    new_coords = np.array([[x[0],
-                            float(x[1]) * float(y[0][0]) + float(y[0][1]),
-                            float(x[2]) * float(y[1][0]) + float(y[1][1]),
-                            float(x[3]) * float(y[2][0]) + float(y[2][1])]
-                           for x in coords
-                           for y in sym_ops])
+    new_coords = []
+    for op in sym_ops:
+        for coord in coords:
+            x, y, z = coord[1], coord[2], coord[3]
+            # create with space around the operator
+            op_x = op[0].replace("x", str(x))
+            op_y = op[1].replace("y", str(y))
+            op_z = op[2].replace("z", str(z))
+            try:
+                x_new = eval(op_x)
+                y_new = eval(op_y)
+                z_new = eval(op_z)
+                temp = [coord[0], x_new, y_new, z_new]
+                new_coords.append(temp)
+            except:
+                pass
 
-    new_coords = np.unique(new_coords, axis=0)
-
-    return new_coords
+    return np.array(new_coords)

@@ -2,7 +2,7 @@
 Writes output files from the cif parser.
 """
 import numpy as np
-from utilities import lattice_matrix, remove_occupancy, get_labels, sort_atoms, get_sym_ops, apply_sym_ops
+from .utilities import lattice_matrix, remove_occupancy, get_labels, sort_atoms, get_sym_ops, apply_sym_ops
 
 
 class OutputWriter():
@@ -15,12 +15,29 @@ class OutputWriter():
         Writes vasp output files.
         """
         av = lattice_matrix(self.data)
-        x_site = np.array(remove_occupancy(
-            self.data['_atom_site_fract_x']), dtype=float)
-        y_site = np.array(remove_occupancy(
-            self.data['_atom_site_fract_y']), dtype=float)
-        z_site = np.array(remove_occupancy(
-            self.data['_atom_site_fract_z']), dtype=float)
+
+        # serach in data for 'fract_x' and 'fract_y' and 'fract_z'
+        fract_x = None
+        fract_y = None
+        fract_z = None
+
+        for key in self.data:
+            if 'fract_x' in key:
+                fract_x = self.data[key]
+                print('found fract_x')
+            if 'fract_y' in key:
+                fract_y = self.data[key]
+                print('found fract_y')
+            if 'fract_z' in key:
+                fract_z = self.data[key]
+                print('found fract_z')
+
+        if fract_x is None or fract_y is None or fract_z is None:
+            raise ValueError('Could not find fractional coordinates.')
+
+        x_site = np.array(remove_occupancy(fract_x))
+        y_site = np.array(remove_occupancy(fract_y))
+        z_site = np.array(remove_occupancy(fract_z))
 
         name = None
         # search for name
@@ -39,7 +56,8 @@ class OutputWriter():
         atom_list = get_labels(self.data)
         coords = np.array([atom_list, x_site, y_site, z_site]).T
         ops = get_sym_ops(self.data)
-        coords = apply_sym_ops(ops, coords)
+        new_coords = apply_sym_ops(ops, coords)
+        coords = np.vstack((coords, new_coords))
 
         atoms, natoms, coords = sort_atoms(coords)
         coords = coords[:, 1:]
